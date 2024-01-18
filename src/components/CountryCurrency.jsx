@@ -18,6 +18,14 @@ const CountryCurrency = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  //check for uppercase of first letter of country => because of backend /cant resolve with lowercase first letter of country
+  useEffect(() => {
+    setCountryName(
+      (country) => country.charAt(0).toUpperCase() + country.slice(1)
+    );
+  }, [countryName]);
+
+  //reset State error/currency
   const resetItems = () => {
     setError("");
     setCurrency("");
@@ -26,13 +34,14 @@ const CountryCurrency = () => {
   //form handler
   const submitHandler = async () => {
     resetItems();
-    setIsLoading(true);
+
     if (!countryName) {
-      setError("Please enter your country name");
+      setError("Please enter your country name!!");
       setIsLoading(false);
       return;
     }
 
+    setIsLoading(true);
     try {
       const result = await fetchData(GET_CURRENCY, { countryName });
       if (result.status != "200") {
@@ -45,12 +54,6 @@ const CountryCurrency = () => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    setCountryName(
-      (country) => country.charAt(0).toUpperCase() + country.slice(1)
-    );
-  }, [countryName]);
 
   return (
     <Flex
